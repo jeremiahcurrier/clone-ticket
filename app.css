@@ -36,7 +36,7 @@ a.start {
   margin: 0 0 10px 0;
 }
 [placeholder]:focus::-webkit-input-placeholder { /*Hide placeholder value on focus*/
-  transition: opacity 0.75s 0.75s linear; 
+  transition: opacity 2s 2s linear; 
   opacity: 0;
 }
 input[type="text"], textarea {

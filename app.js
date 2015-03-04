@@ -78,36 +78,34 @@
       if (inputValueFirst === inputValueSecond) { // If initial accepted value matches what is entered in confirm
         if (inputValueSecond === 1) { // Use the singular form of 'copy' if user only creates one copy
           services.notify('Creating <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice');
+          this.switchTo('loading');
           // send requests
           services.notify('Created <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice');
+          this.switchTo('main');
         } else {
           services.notify('Creating <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice');
+         this.switchTo('loading');
          // send requests
           services.notify('Created <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice');
+          this.switchTo('main');
         }
       } else {
         services.notify('You entered <strong>' + inputValueSecond + '</strong>, please enter <strong>' + inputValueFirst + '</strong> to proceed', 'error');
       }
-
-      // if (inputValue < maximum) {
-      //   services.notify('Creating <strong>' + inputValue + '</strong> tickets dude - hang loose dude!', 'notice');
-      //   for (var i = inputValue; i > 0; i--) {
-      //     this.ajax('createTicketRequest', ticket);
-      //   }
-      // } else {
-      //   services.notify('Can only create up to <strong>' + (maximum-1) + ' tickets</strong> at a time', 'error');
-      // }
-
       inputValueSecond = this.$('input#inputValueIdSecond').val(''); // Empties input field 
-    },
-    createTicketRequestDone: function(data){
-      console.log(data);
-      this.switchTo('creationComplete', {
-        id: data.ticket.id
-      });
-    },
-    createTicketRequestFail: function(data){
-      console.log(data);
     }
+
+// TESTING start    
+    // createTicketRequestDone: function(data){
+    //   console.log(data);
+    //   this.switchTo('creationComplete', {
+    //     id: data.ticket.id
+    //   });
+    // },
+    // createTicketRequestFail: function(data){
+    //   console.log(data);
+    // }
+// TESTING end
+
   };
 }());
