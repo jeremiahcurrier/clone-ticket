@@ -1,0 +1,33 @@
+a {
+  width: 80px;
+  padding: 5px 4px 6px 4px;
+  float: right;
+  font-size: 16px;
+}
+h4, p, a {
+  text-align: center;
+}
+a.start {
+  width: 310px;
+  margin: 0 0 -10px 0;
+  font-weight: bold;
+}
+.form-control {
+  width: 218px;
+  border-radius: 4px;
+  padding: 6px 0px 6px 6px;
+  border: 0 0 0 6px;
+  font-size: 16px;
+}
+.input-group {
+  margin: 0 0 -10px 0;
+}
+.pleaseConfirm {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+[placeholder]:focus::-webkit-input-placeholder { /*Hide placeholder value on focus*/
+  transition: opacity 1.25s 1.25s ease; 
+  opacity: 0;
+}

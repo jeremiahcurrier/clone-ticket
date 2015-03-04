@@ -1,0 +1,1 @@
+<p class="well">Created ticket ID: <a href="/agent/tickets/{{id}}">#{{id}}</a></p>
