@@ -20,10 +20,10 @@
       'createTicketRequest.fail': 'createTicketRequestFail'
     },
     requests: {
-      createTicketRequest: function(ticket) {
+      createTicketRequest: function(ticket) { // Create single ticket clone
         return {
           url: '/api/v2/tickets.json',
-          // url: 'http://requestb.in/13biqn11',
+          // url: 'http://requestb.in/vwuw4ivw',
           dataType: 'json',
           type: 'POST',
           contentType: 'application/json',
@@ -56,15 +56,15 @@
 
       if (isNaN(inputValueFirst) === false) { // If value entered is a number
         if (inputValueFirst < maximum+1) { // If value entered is less than the set ticket creation limit
-          services.notify('Please confirm the number of tickets to create', 'alert');
+          services.notify('Please confirm the number of tickets to create', 'alert', 500);
           this.switchTo('confirm', { // Only switch to Confirm template if value entered is an permissible value
             numberOfTicketsToCreate: inputValueFirst
           });
         } else {
-          services.notify('Can only create up to <strong>' + (maximum) + ' tickets</strong> at a time', 'error');
+          services.notify('Can only create up to <strong>' + (maximum) + ' tickets</strong> at a time', 'error', 500);
         }
       } else {
-        services.notify('Value entered is not a number', 'error');
+        services.notify('Value entered is not a number', 'error', 500);
       }
       this.$('input#inputValueIdFirst').val(''); // Empty the input field
       this.inputValueFirst = inputValueFirst; // Set input value to the root of the app
@@ -77,35 +77,36 @@
 
       if (inputValueFirst === inputValueSecond) { // If initial accepted value matches what is entered in confirm
         if (inputValueSecond === 1) { // Use the singular form of 'copy' if user only creates one copy
-          services.notify('Creating <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice');
+          services.notify('Creating <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice', 500);
           this.switchTo('loading');
-          // send requests
-          services.notify('Created <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice');
+              
+              for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
+// HELP!
+                console.log('looping');
+                this.ajax('createTicketRequest', ticket); // Include ticket object for use in ticket creation request
+
+              }
+
+          services.notify('Created <strong>' +inputValueSecond + '</strong> copy of this ticket', 'notice', 500);
           this.switchTo('main');
         } else {
-          services.notify('Creating <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice');
-         this.switchTo('loading');
-         // send requests
-          services.notify('Created <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice');
+          services.notify('Creating <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
+          this.switchTo('loading');
+// HELP!
+              for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
+                
+                console.log('looping');
+                this.ajax('createTicketRequest', ticket); // Include ticket object for use in ticket creation request
+
+              }
+
+          services.notify('Created <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
           this.switchTo('main');
         }
       } else {
-        services.notify('You entered <strong>' + inputValueSecond + '</strong>, please enter <strong>' + inputValueFirst + '</strong> to proceed', 'error');
+        services.notify('You entered <strong>' + inputValueSecond + '</strong>, please enter <strong>' + inputValueFirst + '</strong> to proceed', 'error', 500);
       }
       inputValueSecond = this.$('input#inputValueIdSecond').val(''); // Empties input field 
     }
-
-// TESTING start    
-    // createTicketRequestDone: function(data){
-    //   console.log(data);
-    //   this.switchTo('creationComplete', {
-    //     id: data.ticket.id
-    //   });
-    // },
-    // createTicketRequestFail: function(data){
-    //   console.log(data);
-    // }
-// TESTING end
-
   };
 }());
