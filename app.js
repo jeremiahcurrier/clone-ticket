@@ -93,7 +93,7 @@
           services.notify('Creating <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
           this.switchTo('loading');
 // HELP!
-              for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
+              for (var j = 0; inputValueSecond > j; j++) { // Make AJAX requests to create a ticket until i = number confirmed by user
                 
                 console.log('looping');
                 this.ajax('createTicketRequest', ticket); // Include ticket object for use in ticket creation request
