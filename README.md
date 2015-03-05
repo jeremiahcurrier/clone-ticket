@@ -2,12 +2,10 @@
 
 Create **n** clones of a Zendesk ticket
 
-### Videos
-
-##### Creating clones successfully
+##### Creating clones (Success)
 
 ![](http://g.recordit.co/5U1Cw95L07.gif)
 
-##### Entering wrong values
+##### Creating clones (Failure)
 
 ![](http://g.recordit.co/wJGZ9GdrwF.gif)
