@@ -16,8 +16,8 @@
           return this.createTicket();
       },
       // Requests events
-      'createTicketRequest.done': 'createTicketRequestDone',
-      'createTicketRequest.fail': 'createTicketRequestFail'
+      //'createTicketRequest.done': 'createTicketRequestDone',
+      //'createTicketRequest.fail': 'createTicketRequestFail'
     },
     requests: {
       createTicketRequest: function(ticket) { // Create single ticket clone
@@ -82,7 +82,7 @@
               
               for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
 // HELP!
-                console.log('looping');
+                console.log('loopinga');
                 this.ajax('createTicketRequest', ticket); // Include ticket object for use in ticket creation request
 
               }
@@ -92,16 +92,22 @@
         } else {
           services.notify('Creating <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
           this.switchTo('loading');
-// HELP!
+// HELP!  
+          var reqs = [];
+          console.log(this);
               for (var j = 0; inputValueSecond > j; j++) { // Make AJAX requests to create a ticket until i = number confirmed by user
                 
-                console.log('looping');
-                this.ajax('createTicketRequest', ticket); // Include ticket object for use in ticket creation request
+                console.log('loopingb');
+                reqs.push(this.ajax('createTicketRequest', ticket)); // Include ticket object for use in ticket creation request
 
               }
+          this.when.apply(this, reqs).then(_.bind(function(){
+            console.log('applied');
+            services.notify('Created <strong>' + inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
+            this.switchTo('main');
+          }, this));
 
-          services.notify('Created <strong>' +inputValueSecond + '</strong> copies of this ticket', 'notice', 500);
-          this.switchTo('main');
+          
         }
       } else {
         services.notify('You entered <strong>' + inputValueSecond + '</strong>, please enter <strong>' + inputValueFirst + '</strong> to proceed', 'error', 500);
