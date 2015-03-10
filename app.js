@@ -19,7 +19,7 @@
       }
     },
     requests: {
-      createTicketRequest: function(ticket, custom_fields) { // Create single ticket clone
+      createTicketRequest: function(ticket, custom_fields, assignee_id) { // Create single ticket clone
         return {
           url: '/api/v2/tickets.json',
           // url: 'http://requestb.in/vwuw4ivw',
@@ -36,7 +36,7 @@
               "priority": ticket.priority(),
               "type": ticket.type(),
               "tags": ticket.tags(),
-              "assignee_id": ticket.assignee().user().id(),
+              "assignee_id": assignee_id,
               "requester_id": ticket.requester().id(),
               "collaborator_ids": _.map(ticket.collaborators(), function(cc) { return cc.email(); }),
               "custom_fields": custom_fields
@@ -75,7 +75,11 @@
           inputValueSecond    = parseInt(this.$('input#inputValueIdSecond').val(), 10),
           maximum             = parseInt(this.setting('Creation Limit'), 10),
           inputValueFirst     = this.inputValueFirst,
-          custom_fields = this.serializeCustomFields();
+          custom_fields       = this.serializeCustomFields();
+
+      if (ticket.assignee().user() === undefined) {
+        var assignee_id = "";
+      }
 
       this.inputValueSecond = inputValueSecond;          
 
@@ -85,7 +89,7 @@
           this.switchTo('loading');
               for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
                 // console.log('loopinga');
-                this.ajax('createTicketRequest', ticket, custom_fields); // Include ticket object for use in ticket creation request
+                this.ajax('createTicketRequest', ticket, custom_fields, assignee_id); // Include ticket object for use in ticket creation request
               }
           services.notify('Created <strong>' + inputValueSecond + '</strong> copy of this ticket', 'notice', 1500);
           this.switchTo('main');
@@ -96,7 +100,7 @@
           console.log(this);
               for (var j = 0; inputValueSecond > j; j++) { // Make AJAX requests to create a ticket until i = number confirmed by user
                 // console.log('loopingb');
-                reqs.push(this.ajax('createTicketRequest', ticket, custom_fields)); // Include ticket object for use in ticket creation request
+                reqs.push(this.ajax('createTicketRequest', ticket, custom_fields, assignee_id)); // Include ticket object for use in ticket creation request
               }
           this.when.apply(this, reqs).then(_.bind(function(){
             var inputValueSecond = this.inputValueSecond;
