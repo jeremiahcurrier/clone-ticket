@@ -20,10 +20,22 @@
       'createTicketRequest.always': 'createTicketRequestDone'
     },
     requests: {
-      createTicketRequest: function(ticket, custom_fields, assignee_id) { // Create single ticket clone
+      createTicketRequest: function(ticket, custom_fields) { // Create single ticket clone
+
+        // if (ticket.assignee().user() === undefined) {
+        //   var assignee_id = "";
+        // } else {
+        //   var assignee_id = ticket.assignee().user().id();
+        // }
+
+        // if (ticket.assignee().group() === undefined) {
+        //   var group_id = "";
+        // } else {
+        //   var group_id = ticket.assignee().group().id();
+        // }
+
         return {
           url: '/api/v2/tickets.json',
-          // url: 'http://requestb.in/qhxubxqh',
           dataType: 'json',
           type: 'POST',
           contentType: 'application/json',
@@ -37,7 +49,10 @@
               "priority": ticket.priority(),
               "type": ticket.type(),
               "tags": ticket.tags(),
-              "assignee_id": assignee_id,
+              // "assignee_id": assignee_id,
+              // "group_id": group_id,
+              "assignee_id": ticket.assignee().user().id() || null,
+              "group_id": ticket.assignee().group().id() || null,
               "requester_id": ticket.requester().id(),
               "collaborator_ids": _.map(ticket.collaborators(), function(cc) { return cc.email(); }),
               "custom_fields": custom_fields
@@ -77,10 +92,6 @@
           maximum             = parseInt(this.setting('Creation Limit'), 10),
           inputValueFirst     = this.inputValueFirst,
           custom_fields       = this.serializeCustomFields();
-      
-      if (ticket.assignee().user() === undefined) {
-        var assignee_id = "";
-      }
 
       this.inputValueSecond = inputValueSecond; 
 
@@ -97,7 +108,7 @@
                   }
                 }
                 // Make Request
-                this.ajax('createTicketRequest', ticket, custom_fields, assignee_id);
+                this.ajax('createTicketRequest', ticket, custom_fields);
               }
           services.notify('Created <strong>' + inputValueSecond + '</strong> copy of this ticket', 'notice', 1500);
           this.switchTo('main');
@@ -115,7 +126,7 @@
                 }
               }
               // Make Request
-              reqs.push(this.ajax('createTicketRequest', ticket, custom_fields, assignee_id)); // Include ticket object for use in ticket creation request
+              reqs.push(this.ajax('createTicketRequest', ticket, custom_fields)); // Include ticket object for use in ticket creation request
             }
 
           this.when.apply(this, reqs).then(_.bind(function(){
