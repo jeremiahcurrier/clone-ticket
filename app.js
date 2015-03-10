@@ -21,19 +21,6 @@
     },
     requests: {
       createTicketRequest: function(ticket, custom_fields) { // Create single ticket clone
-
-        // if (ticket.assignee().user() === undefined) {
-        //   var assignee_id = "";
-        // } else {
-        //   var assignee_id = ticket.assignee().user().id();
-        // }
-
-        // if (ticket.assignee().group() === undefined) {
-        //   var group_id = "";
-        // } else {
-        //   var group_id = ticket.assignee().group().id();
-        // }
-
         return {
           url: '/api/v2/tickets.json',
           dataType: 'json',
@@ -49,10 +36,8 @@
               "priority": ticket.priority(),
               "type": ticket.type(),
               "tags": ticket.tags(),
-              // "assignee_id": assignee_id,
-              // "group_id": group_id,
-              "assignee_id": ticket.assignee().user().id() || null,
-              "group_id": ticket.assignee().group().id() || null,
+              "assignee_id": (ticket.assignee().user() && ticket.assignee().user().id()) || null,
+              "group_id": (ticket.assignee().group() && ticket.assignee().group().id()) || null,
               "requester_id": ticket.requester().id(),
               "collaborator_ids": _.map(ticket.collaborators(), function(cc) { return cc.email(); }),
               "custom_fields": custom_fields
@@ -107,6 +92,7 @@
                     custom_fields[z].value = formattedCustomDateValueA; // Set value for only this custom date field to new date formatting
                   }
                 }
+
                 // Make Request
                 this.ajax('createTicketRequest', ticket, custom_fields);
               }
@@ -125,6 +111,7 @@
                   custom_fields[f].value = formattedCustomDateValueB; // Set value for only this custom date field to new date formatting
                 }
               }
+
               // Make Request
               reqs.push(this.ajax('createTicketRequest', ticket, custom_fields)); // Include ticket object for use in ticket creation request
             }

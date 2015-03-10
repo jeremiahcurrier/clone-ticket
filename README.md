@@ -6,4 +6,8 @@ Can't use this app currently if you're using custom date fields, all other custo
 
 ##### Creating clones
 
-![](http://g.recordit.co/g0ItLG0h9x.gif)
+![](http://g.recordit.co/AmX5urMePC.gif)
+
+##### Look for this in the Zendesk Apps Marketplace
+
+![](http://i.imgur.com/sLHshGk.png)
