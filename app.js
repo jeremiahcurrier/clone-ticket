@@ -21,7 +21,6 @@
     },
     requests: {
       createTicketRequest: function(ticket, custom_fields, assignee_id) { // Create single ticket clone
-
         return {
           url: '/api/v2/tickets.json',
           // url: 'http://requestb.in/qhxubxqh',
@@ -45,28 +44,23 @@
             }
           })
         };
-
       }
-    },
-    createTicketRequestDone: function(data){
-      console.log('data.ticket.id:');
-      console.log(data.ticket.id);
     },
     init: function() {
       this.switchTo('main');
     },
     switchToInput: function() {
-      this.switchTo('create');
+      this.switchTo('create'); // Present use with 'create' template to confirm # clones to create
     },
     confirmAmount: function() { // Add code to disable button unless value entered is correct
       var inputValueFirst          = parseInt(this.$('input#inputValueIdFirst').val(), 10),
           maximum             = parseInt(this.setting('Creation Limit'), 10);
-
+      
       if (isNaN(inputValueFirst) === false) { // If value entered is a number
         if (inputValueFirst < maximum+1) { // If value entered is less than the set ticket creation limit
           services.notify('Please enter <strong>' + inputValueFirst + '</strong> to confirm', 'alert', 1000);
           this.switchTo('confirm', { // Only switch to Confirm template if value entered is an permissible value
-            numberOfTicketsToCreate: inputValueFirst
+            inputValueFirst: inputValueFirst
           });
         } else {
           services.notify('Can only create up to <strong>' + (maximum) + ' tickets</strong> at a time', 'error', 1000);
@@ -83,67 +77,27 @@
           maximum             = parseInt(this.setting('Creation Limit'), 10),
           inputValueFirst     = this.inputValueFirst,
           custom_fields       = this.serializeCustomFields();
-
+      
       if (ticket.assignee().user() === undefined) {
         var assignee_id = "";
       }
 
-      this.inputValueSecond = inputValueSecond;          
+      this.inputValueSecond = inputValueSecond; 
 
       if (inputValueFirst === inputValueSecond) { // If initial accepted value matches what is entered in confirm
-        if (inputValueSecond === 1) { // Use the singular form of 'copy' if user only creates one copy
+        if (inputValueSecond === 1) { // If making only one clone
           services.notify('Creating <strong>' + inputValueSecond + '</strong> copy of this ticket', 'notice', 500);
           this.switchTo('loading');
               for (var i = 0; inputValueSecond > i; i++) { // Make AJAX requests to create a ticket until i = number confirmed by user
-                // console.log('loopinga');
-
-
-                for (var z = 0; custom_fields.length > z; z++) {
-                  
-                  if (typeof custom_fields[z].value === 'object') {
-                    
-                    // console.log('OBJECT:');
-                    // console.log(custom_fields[z].value);
-
-                    var correctlyFormattedDateValueA = (((JSON.stringify(custom_fields[z].value)).split('"'))[1].split('T'))[0];
-                    // console.log('correctlyFormattedDateValue:');
-                    // console.log(correctlyFormattedDateValue);
-                    // console.log('typeof correctlyFormattedDateValue:');
-                    // console.log(typeof correctlyFormattedDateValue);
-
-                    custom_fields[z].value = correctlyFormattedDateValueA;
-
-                    // var obj = custom_fields[z].value;
-                    // var string = JSON.stringify(obj);
-                    // console.log('STRING:');
-                    // console.log(string);
-                    // console.log(typeof string);
-                    // var split = string.split('"');
-                    // console.log('split:');
-                    // console.log(split);
-                    // var getDateFromSplitString = split[1].split('T');
-                    // console.log('getDateFromSplitString:');
-                    // console.log(getDateFromSplitString);
-                    // var correctlyFormattedDateValue = getDateFromSplitString[0];
-                    // console.log('correctlyFormattedDateValue:');
-                    // console.log(correctlyFormattedDateValue);
-                    // console.log(typeof correctlyFormattedDateValue);
-
-                    // custom_fields[z].value = correctlyFormattedDateValue;
-                    // console.log('custom_fields[z].value:');
-                    // console.log(custom_fields[z].value);
-
+                console.log('Creating single ticket');
+                for (var z = 0; custom_fields.length > z; z++) { // Loop through all custom fields
+                  if (typeof custom_fields[z].value === 'object') { // Only the custom ticket field for 'date' has a typeof 'object'
+                    var formattedCustomDateValueA = (((JSON.stringify(custom_fields[z].value)).split('"'))[1].split('T'))[0]; // reformat to string 'YYYY-MM-DD'
+                    custom_fields[z].value = formattedCustomDateValueA; // Set value for only this custom date field to new date formatting
                   }
-
-                  // console.log(custom_fields[z].value);
-
                 }
-
-                // console.log('custom_fields:');
-                // console.log(custom_fields);
-
-
-                this.ajax('createTicketRequest', ticket, custom_fields, assignee_id); // Include ticket object for use in ticket creation request
+                // Make Request
+                this.ajax('createTicketRequest', ticket, custom_fields, assignee_id);
               }
           services.notify('Created <strong>' + inputValueSecond + '</strong> copy of this ticket', 'notice', 1500);
           this.switchTo('main');
@@ -152,119 +106,76 @@
           this.switchTo('loading');
           var reqs = [];
           console.log(this);
-              for (var j = 0; inputValueSecond > j; j++) { // Make AJAX requests to create a ticket until i = number confirmed by user
-                // console.log('loopingb');
-
-
-                for (var f = 0; custom_fields.length > f; f++) {
-                  
-                  if (typeof custom_fields[f].value === 'object') {
-                    
-                    // console.log('OBJECT:');
-                    // console.log(custom_fields[z].value);
-
-                    var correctlyFormattedDateValueB = (((JSON.stringify(custom_fields[f].value)).split('"'))[1].split('T'))[0];
-                    // console.log('correctlyFormattedDateValue:');
-                    // console.log(correctlyFormattedDateValue);
-                    // console.log('typeof correctlyFormattedDateValue:');
-                    // console.log(typeof correctlyFormattedDateValue);
-
-                    custom_fields[f].value = correctlyFormattedDateValueB;
-
-                    // var obj = custom_fields[z].value;
-                    // var string = JSON.stringify(obj);
-                    // console.log('STRING:');
-                    // console.log(string);
-                    // console.log(typeof string);
-                    // var split = string.split('"');
-                    // console.log('split:');
-                    // console.log(split);
-                    // var getDateFromSplitString = split[1].split('T');
-                    // console.log('getDateFromSplitString:');
-                    // console.log(getDateFromSplitString);
-                    // var correctlyFormattedDateValue = getDateFromSplitString[0];
-                    // console.log('correctlyFormattedDateValue:');
-                    // console.log(correctlyFormattedDateValue);
-                    // console.log(typeof correctlyFormattedDateValue);
-
-                    // custom_fields[z].value = correctlyFormattedDateValue;
-                    // console.log('custom_fields[z].value:');
-                    // console.log(custom_fields[z].value);
-
-                  }
-
-                  // console.log(custom_fields[z].value);
-
+            for (var j = 0; inputValueSecond > j; j++) { // Make AJAX requests to create a ticket until i = number confirmed by user
+              console.log('Creating multiple tickets');
+              for (var f = 0; custom_fields.length > f; f++) { // Loop through all custom fields
+                if (typeof custom_fields[f].value === 'object') { // If custom date field - reformat date 
+                  var formattedCustomDateValueB = (((JSON.stringify(custom_fields[f].value)).split('"'))[1].split('T'))[0];
+                  custom_fields[f].value = formattedCustomDateValueB; // Set value for only this custom date field to new date formatting
                 }
-
-                // console.log('custom_fields:');
-                // console.log(custom_fields);
-
-
-
-
-                reqs.push(this.ajax('createTicketRequest', ticket, custom_fields, assignee_id)); // Include ticket object for use in ticket creation request
               }
+              // Make Request
+              reqs.push(this.ajax('createTicketRequest', ticket, custom_fields, assignee_id)); // Include ticket object for use in ticket creation request
+            }
+
           this.when.apply(this, reqs).then(_.bind(function(){
             var inputValueSecond = this.inputValueSecond;
-            // console.log('inputValueSecond:');
-            // console.log(inputValueSecond);
-            // console.log('applied');
             services.notify('Created <strong>' + inputValueSecond + '</strong> copies of this ticket', 'notice', 1500);
             this.switchTo('main');
-          }, this));          
+          }, this));
+
         }
       } else {
         services.notify('You entered <strong>' + inputValueSecond + '</strong>, please enter <strong>' + inputValueFirst + '</strong> to proceed', 'error', 500);
       }
+
       inputValueSecond = this.$('input#inputValueIdSecond').val(''); // Empties input field 
+    },
+    createTicketRequestDone: function(data){
+      console.log('Created Ticket ID: ' + data.ticket.id);
     },
     serializeCustomFields: function() {
       var fields = [];
+
       this.forEachCustomField(function(field){
 
-        // console.log(field.value);
-
         if (field.value !== ""){
-            var test = ""+field.value+"";
-            var isDate = "";
-            if(field.value !== undefined){
-                isDate = test.match(this.dateRegExp);
-            }else{
+          var test = ""+field.value+"";
+          var isDate = "";
+          
+          if (field.value !== undefined){
+              isDate = test.match(this.dateRegExp);
+          }
+          
+          var value = "";
+          
+          if (isDate !== "" && isDate !== null) {
+              var date = new Date(field.value);
+              var year = date.getFullYear();
+              var month = (1 + date.getMonth()).toString();
+              month = month.length > 1 ? month : '0' + month;
+              var day = date.getDate().toString();
+              day = day.length > 1 ? day : '0' + day;
+              value = year+"-"+month+"-"+day;
+          } else {
+              value = field.value;
+          }
 
-            }
-
-                var value = "";
-                if(isDate !== "" && isDate !== null){
-                    var date = new Date(field.value);
-                    var year = date.getFullYear();
-                    var month = (1 + date.getMonth()).toString();
-                    month = month.length > 1 ? month : '0' + month;
-                    var day = date.getDate().toString();
-                    day = day.length > 1 ? day : '0' + day;
-
-                    value = year+"-"+month+"-"+day;
-                }else{
-                    value = field.value;
-                }
           if (field.value !== null) { // Only save field ID & value is there is a value present
-            
             fields.push({
-                      id: field.id,
-                      value: value
+              id: field.id,
+              value: value
             });
           }
         }
       });
+
       return fields;
     },
     forEachCustomField: function(block){
       _.each(this._customFields(), function(field){
-        var id = field.match(this.customFieldRegExp)[1],
-            value = this.normalizeValue(this.ticket().customField(field));
-
-            console.log(value);
-
+        var id      = field.match(this.customFieldRegExp)[1],
+            value   = this.normalizeValue(this.ticket().customField(field));
         block.call(this, {
           label: field,
           id: id,
